@@ -34,13 +34,13 @@ jobs:
             echo 'export IMAGE_NAME=$CIRCLE_PROJECT_REPONAME' >> $BASH_ENV && source $BASH_ENV
             pip install --user -r requirements.txt
             pyinstaller -F hello_world.py
-            docker build -t us.gcr.io/$GCP_PROJECT_ID/$IMAGE_NAME -t us.gcr.io/$GCP_PROJECT_ID/$IMAGE_NAME:$TAG .
+            docker build -t us.gcr.io/$GOOGLE_PROJECT_ID/$IMAGE_NAME -t us.gcr.io/$GOOGLE_PROJECT_ID/$IMAGE_NAME:$TAG .
       - gcp-gcr/gcr-auth:
           gcloud-service-key: GOOGLE_CLOUD_KEYS
-          google-project-id: GCP_PROJECT_ID
+          google-project-id: GOOGLE_PROJECT_ID
           google-compute-zone: GOOGLE_COMPUTE_ZONE
       - gcp-gcr/push-image:
-          google-project-id: GCP_PROJECT_ID
+          google-project-id: GOOGLE_PROJECT_ID
           registry-url: "us.gcr.io"
           image: $IMAGE_NAME
       - cloudrun/create_gke_cluster:
@@ -51,7 +51,7 @@ jobs:
           scopes: "cloud-platform"
       - cloudrun/deploy:
           platform: "gke"
-          image: "us.gcr.io/$GCP_PROJECT_ID/$IMAGE_NAME"
+          image: "us.gcr.io/$GOOGLE_PROJECT_ID/$IMAGE_NAME"
           cluster: $CIRCLE_PROJECT_REPONAME
           service-name: $CIRCLE_PROJECT_REPONAME
           region: $GOOGLE_COMPUTE_ZONE
