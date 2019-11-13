@@ -17,7 +17,7 @@ jobs:
           name: Run Tests
           command: |
             pytest
-  build_push_image_cloud_run_mangaged:
+  build_push_image_cloud_run_gke:
     docker:
       - image: circleci/python:3.7.4
     steps:
@@ -43,16 +43,23 @@ jobs:
           google-project-id: GCP_PROJECT_ID
           registry-url: "us.gcr.io"
           image: $IMAGE_NAME
+      - cloudrun/create_gke_cluster:
+          cluster-name: $CIRCLE_PROJECT_REPONAME
+          machine-type: "g1-small"
+          zone: "us-east1"
+          enable-stackdriver-kubernetes: true
+          scopes: "cloud-platform"
       - cloudrun/deploy:
-          platform: "managed"
+          platform: "gke"
           image: "us.gcr.io/$GCP_PROJECT_ID/$IMAGE_NAME"
-          service-name: "orb-gcp-cloud-run"
+          cluster: $CIRCLE_PROJECT_REPONAME
+          service-name: $CIRCLE_PROJECT_REPONAME
           region: $GOOGLE_COMPUTE_ZONE
           unauthenticated: true
 workflows:
   build_test_deploy:
     jobs:
       - build_test
-      - build_push_image_cloud_run_mangaged:
+      - build_push_image_cloud_run_gke:
           requires:
             - build_test
