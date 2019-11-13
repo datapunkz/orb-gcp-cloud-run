@@ -54,7 +54,7 @@ jobs:
           image: "us.gcr.io/$GOOGLE_PROJECT_ID/$IMAGE_NAME"
           cluster: $CIRCLE_PROJECT_REPONAME
           service-name: $CIRCLE_PROJECT_REPONAME
-          zone: $GOOGLE_COMPUTE_ZONE
+          cluster-location: $GOOGLE_COMPUTE_ZONE
 workflows:
   build_test_deploy:
     jobs:
