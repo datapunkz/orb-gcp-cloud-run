@@ -55,6 +55,7 @@ jobs:
           cluster: $CIRCLE_PROJECT_REPONAME
           service-name: $CIRCLE_PROJECT_REPONAME
           cluster-location: $GOOGLE_COMPUTE_ZONE
+          
 workflows:
   build_test_deploy:
     jobs:
