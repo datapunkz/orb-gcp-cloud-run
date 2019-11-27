@@ -28,7 +28,7 @@ jobs:
           name: Build app binary and Docker image
           command: |
             echo 'export PATH=~$PATH:~/.local/bin' >> $BASH_ENV
-            echo ${GCP_PROJECT_KEY} | base64 --decode --ignore-garbage > $HOME/gcloud-service-key.json
+            echo ${GOOGLE_PROJECT_ID} | base64 --decode --ignore-garbage > $HOME/gcloud-service-key.json
             echo 'export GOOGLE_CLOUD_KEYS=$(cat $HOME/gcloud-service-key.json)' >> $BASH_ENV
             echo 'export TAG=${CIRCLE_SHA1}' >> $BASH_ENV
             echo 'export IMAGE_NAME=$CIRCLE_PROJECT_REPONAME' >> $BASH_ENV && source $BASH_ENV
@@ -40,7 +40,7 @@ jobs:
           google-project-id: GOOGLE_PROJECT_ID
           google-compute-zone: GOOGLE_COMPUTE_ZONE
       - gcp-gcr/push-image:
-          google-project-id: GCP_PROJECT_ID
+          google-project-id: GOOGLE_PROJECT_ID
           registry-url: "us.gcr.io"
           image: $IMAGE_NAME
       - cloudrun/deploy:
